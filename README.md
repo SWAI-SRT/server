@@ -7,6 +7,7 @@
 │   └── db.go
 ├── controller
 │   ├── auth.controller.go
+│   ├── image.controller.go
 │   ├── map.controller.go
 │   └── reports.controller.go
 ├── docs
@@ -28,6 +29,7 @@
 │   └── jwt.go
 └── service
     ├── auth.service.go
+    ├── image.service.go
     ├── map.service.go
     └── reports.service.go
 ```
