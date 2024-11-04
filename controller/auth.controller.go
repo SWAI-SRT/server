@@ -46,7 +46,7 @@ func (c *AuthController) Signup(ctx *fiber.Ctx) error {
 // @Param authDto body dto.AuthDto true "로그인 정보"
 // @Success 200 {object} map[string]interface{} "로그인이 성공적으로 되었습니다"
 // @Failure 400 {object} map[string]interface{} "잘못된 입력입니다"
-// @Failure 401 {object} map[string.interface{} "이메일 또는 비밀번호가 일치하지 않습니다"
+// @Failure 401 {object} map[string]interface{} "이메일 또는 비밀번호가 일치하지 않습니다"
 // @Failure 500 {object} map[string]interface{} "토큰 생성에 실패했습니다"
 // @Router /auth/signin [post]
 func (c *AuthController) Signin(ctx *fiber.Ctx) error {
@@ -67,8 +67,8 @@ func (c *AuthController) Signin(ctx *fiber.Ctx) error {
 // @Param Authorization header string true "Refresh 토큰"
 // @Success 200 {object} map[string]interface{} "새로운 토큰이 발급되었습니다"
 // @Failure 400 {object} map[string]interface{} "Refresh 토큰이 필요합니다"
-// @Failure 401 {object} map[string.interface{} "유효하지 않은 Refresh 토큰입니다"
-// @Failure 500 {object} map[string.interface{} "토큰 생성에 실패했습니다"
+// @Failure 401 {object} map[string]interface{} "유효하지 않은 Refresh 토큰입니다"
+// @Failure 500 {object} map[string]interface{} "토큰 생성에 실패했습니다"
 // @Router /auth/refresh [post]
 func (c *AuthController) Refresh(ctx *fiber.Ctx) error {
 	refreshToken := ctx.Get("Authorization")
@@ -82,7 +82,7 @@ func (c *AuthController) Refresh(ctx *fiber.Ctx) error {
 // @Tags Auth
 // @Produce json
 // @Success 200 {object} dto.ProfileDto "프로필 정보"
-// @Failure 404 {object} map[string.interface{} "프로필을 찾을 수 없습니다"
+// @Failure 404 {object} map[string]interface{} "프로필을 찾을 수 없습니다"
 // @Router /auth/profile [get]
 func (c *AuthController) GetProfile(ctx *fiber.Ctx) error {
 	userId := ctx.Locals("userId").(uint)
@@ -99,9 +99,9 @@ func (c *AuthController) GetProfile(ctx *fiber.Ctx) error {
 // @Param editProfileDto body dto.EditProfileDto true "프로필 수정 정보"
 // @Param file formData file false "이미지 파일"
 // @Success 200 {object} entity.User "수정된 프로필 정보"
-// @Failure 400 {object} map[string.interface{} "잘못된 입력입니다"
-// @Failure 404 {object} map[string.interface{} "사용자를 찾을 수 없습니다"
-// @Failure 500 {object} map[string.interface{} "프로필 수정에 실패했습니다"
+// @Failure 400 {object} map[string]interface{} "잘못된 입력입니다"
+// @Failure 404 {object} map[string]interface{} "사용자를 찾을 수 없습니다"
+// @Failure 500 {object} map[string]interface{} "프로필 수정에 실패했습니다"
 // @Router /auth/profile [patch]
 func (c *AuthController) EditProfile(ctx *fiber.Ctx) error {
 	userId := ctx.Locals("userId").(uint)
@@ -134,8 +134,8 @@ func (c *AuthController) EditProfile(ctx *fiber.Ctx) error {
 // @Description 사용자가 로그아웃합니다.
 // @Tags Auth
 // @Produce json
-// @Success 200 {object} map[string.interface{} "로그아웃되었습니다"
-// @Failure 500 {object} map[string.interface{} "로그아웃에 실패했습니다"
+// @Success 200 {object} map[string]interface{} "로그아웃되었습니다"
+// @Failure 500 {object} map[string]interface{} "로그아웃에 실패했습니다"
 // @Router /auth/logout [post]
 func (c *AuthController) Logout(ctx *fiber.Ctx) error {
 	userId := ctx.Locals("userId").(uint)
@@ -148,8 +148,8 @@ func (c *AuthController) Logout(ctx *fiber.Ctx) error {
 // @Description 사용자의 계정을 삭제합니다.
 // @Tags Auth
 // @Produce json
-// @Success 200 {object} map[string.interface{} "계정이 삭제되었습니다"
-// @Failure 500 {object} map[string.interface{} "계정 삭제에 실패했습니다"
+// @Success 200 {object} map[string]interface{} "계정이 삭제되었습니다"
+// @Failure 500 {object} map[string]interface{} "계정 삭제에 실패했습니다"
 // @Router /auth/delete [delete]
 func (c *AuthController) DeleteAccount(ctx *fiber.Ctx) error {
 	userId := ctx.Locals("userId").(uint)

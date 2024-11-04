@@ -1,8 +1,25 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a sample server for a Fiber application.",
+        "title": "Swagger API Documentation",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
     },
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
         "/auth/delete": {
             "delete": {
@@ -86,10 +103,10 @@
                     }
                 }
             },
-            "put": {
+            "patch": {
                 "description": "사용자의 프로필 정보를 수정합니다.",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -107,6 +124,12 @@
                         "schema": {
                             "$ref": "#/definitions/dto.EditProfileDto"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "이미지 파일",
+                        "name": "file",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -636,10 +659,46 @@
         "dto.EditProfileDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+                "imageUri": {
+                    "type": "string"
+                },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }
@@ -647,7 +706,28 @@
         "dto.ProfileDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
                     "type": "string"
                 },
                 "id": {
@@ -656,7 +736,19 @@
                 "imageUri": {
                     "type": "string"
                 },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }
@@ -664,7 +756,34 @@
         "dto.SignupDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+                "imageUri": {
+                    "type": "string"
+                },
+                "medicines": {
                     "type": "string"
                 },
                 "nickName": {
@@ -672,12 +791,33 @@
                 },
                 "password": {
                     "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "string"
                 }
             }
         },
         "entity.User": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "blood_type": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -687,7 +827,16 @@
                 "email": {
                     "type": "string"
                 },
+                "emergency_phone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
                 "hashed_refresh_token": {
+                    "type": "string"
+                },
+                "height": {
                     "type": "string"
                 },
                 "id": {
@@ -696,13 +845,25 @@
                 "image_uri": {
                     "type": "string"
                 },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickname": {
                     "type": "string"
                 },
                 "password": {
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                },
+                "underlying_diseases": {
+                    "type": "string"
+                },
                 "updated_at": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }

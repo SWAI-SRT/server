@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   dto.AuthDto:
     properties:
@@ -43,54 +44,157 @@ definitions:
     type: object
   dto.EditProfileDto:
     properties:
+      address:
+        type: string
+      allergys:
+        type: string
+      birthday:
+        type: string
+      bloodType:
+        type: string
       email:
         type: string
+      emergencyPhone:
+        type: string
+      gender:
+        type: string
+      height:
+        type: string
+      imageUri:
+        type: string
+      medicines:
+        type: string
       nickName:
+        type: string
+      phone:
+        type: string
+      underlyingDiseases:
+        type: string
+      weight:
         type: string
     type: object
   dto.ProfileDto:
     properties:
+      address:
+        type: string
+      allergys:
+        type: string
+      birthday:
+        type: string
+      bloodType:
+        type: string
       email:
+        type: string
+      emergencyPhone:
+        type: string
+      gender:
+        type: string
+      height:
         type: string
       id:
         type: integer
       imageUri:
         type: string
+      medicines:
+        type: string
       nickName:
+        type: string
+      phone:
+        type: string
+      underlyingDiseases:
+        type: string
+      weight:
         type: string
     type: object
   dto.SignupDto:
     properties:
+      address:
+        type: string
+      allergys:
+        type: string
+      birthday:
+        type: string
+      bloodType:
+        type: string
       email:
+        type: string
+      emergencyPhone:
+        type: string
+      gender:
+        type: string
+      height:
+        type: string
+      imageUri:
+        type: string
+      medicines:
         type: string
       nickName:
         type: string
       password:
         type: string
+      phone:
+        type: string
+      underlyingDiseases:
+        type: string
+      weight:
+        type: string
     type: object
   entity.User:
     properties:
+      address:
+        type: string
+      allergys:
+        type: string
+      birthday:
+        type: string
+      blood_type:
+        type: string
       created_at:
         type: string
       deleted_at:
         type: string
       email:
         type: string
+      emergency_phone:
+        type: string
+      gender:
+        type: string
       hashed_refresh_token:
+        type: string
+      height:
         type: string
       id:
         type: integer
       image_uri:
         type: string
+      medicines:
+        type: string
       nickname:
         type: string
       password:
         type: string
+      phone:
+        type: string
+      underlying_diseases:
+        type: string
       updated_at:
         type: string
+      weight:
+        type: string
     type: object
+host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a Fiber application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger API Documentation
+  version: "1.0"
 paths:
   /auth/delete:
     delete:
@@ -148,9 +252,9 @@ paths:
       summary: 프로필 조회
       tags:
       - Auth
-    put:
+    patch:
       consumes:
-      - application/json
+      - multipart/form-data
       description: 사용자의 프로필 정보를 수정합니다.
       parameters:
       - description: 프로필 수정 정보
@@ -159,6 +263,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dto.EditProfileDto'
+      - description: 이미지 파일
+        in: formData
+        name: file
+        type: file
       produces:
       - application/json
       responses:
@@ -476,4 +584,6 @@ paths:
       summary: 사용자 신고 조회
       tags:
       - Reports
+schemes:
+- http
 swagger: "2.0"

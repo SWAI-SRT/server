@@ -9,7 +9,16 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -97,10 +106,10 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
+            "patch": {
                 "description": "사용자의 프로필 정보를 수정합니다.",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -118,6 +127,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/dto.EditProfileDto"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "이미지 파일",
+                        "name": "file",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -647,10 +662,46 @@ const docTemplate = `{
         "dto.EditProfileDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+                "imageUri": {
+                    "type": "string"
+                },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }
@@ -658,7 +709,28 @@ const docTemplate = `{
         "dto.ProfileDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
                     "type": "string"
                 },
                 "id": {
@@ -667,7 +739,19 @@ const docTemplate = `{
                 "imageUri": {
                     "type": "string"
                 },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }
@@ -675,7 +759,34 @@ const docTemplate = `{
         "dto.SignupDto": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "bloodType": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "emergencyPhone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
+                },
+                "imageUri": {
+                    "type": "string"
+                },
+                "medicines": {
                     "type": "string"
                 },
                 "nickName": {
@@ -683,12 +794,33 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "underlyingDiseases": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "string"
                 }
             }
         },
         "entity.User": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "allergys": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "blood_type": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -698,7 +830,16 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "emergency_phone": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
                 "hashed_refresh_token": {
+                    "type": "string"
+                },
+                "height": {
                     "type": "string"
                 },
                 "id": {
@@ -707,13 +848,25 @@ const docTemplate = `{
                 "image_uri": {
                     "type": "string"
                 },
+                "medicines": {
+                    "type": "string"
+                },
                 "nickname": {
                     "type": "string"
                 },
                 "password": {
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                },
+                "underlying_diseases": {
+                    "type": "string"
+                },
                 "updated_at": {
+                    "type": "string"
+                },
+                "weight": {
                     "type": "string"
                 }
             }
@@ -723,12 +876,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
-	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Version:          "1.0",
+	Host:             "localhost:8080",
+	BasePath:         "/",
+	Schemes:          []string{"http"},
+	Title:            "Swagger API Documentation",
+	Description:      "This is a sample server for a Fiber application.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
