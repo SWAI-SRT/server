@@ -145,6 +145,7 @@ func (s *AuthService) EditProfile(userId uint, editProfileDto dto.EditProfileDto
 
 	user.NickName = editProfileDto.NickName
 	user.Email = editProfileDto.Email
+	user.ImageUri = editProfileDto.ImageUri
 	user.Gender = editProfileDto.Gender
 	user.Birthday = editProfileDto.Birthday
 	user.Phone = editProfileDto.Phone

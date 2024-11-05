@@ -104,29 +104,29 @@ func (c *AuthController) GetProfile(ctx *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{} "프로필 수정에 실패했습니다"
 // @Router /auth/profile [patch]
 func (c *AuthController) EditProfile(ctx *fiber.Ctx) error {
-	userId := ctx.Locals("userId").(uint)
-	var editProfileDto dto.EditProfileDto
-	if err := ctx.BodyParser(&editProfileDto); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 입력입니다"})
-	}
+    userId := ctx.Locals("userId").(uint)
+    var editProfileDto dto.EditProfileDto
+    if err := ctx.BodyParser(&editProfileDto); err != nil {
+        return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 입력입니다"})
+    }
 
-	file, err := ctx.FormFile("image")
-	if err == nil {
-		fileContent, err := file.Open()
-		if err != nil {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "파일을 열 수 없습니다"})
-		}
-		defer fileContent.Close()
+    file, err := ctx.FormFile("imageUri")
+    if err == nil {
+        fileContent, err := file.Open()
+        if err != nil {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "파일을 열 수 없습니다"})
+        }
+        defer fileContent.Close()
 
-		imageUrl, err := c.imageService.Upload(file.Filename, fileContent)
-		if err != nil {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "이미지 업로드 실패"})
-		}
-		editProfileDto.ImageUri = imageUrl
-	}
+        imageUrl, err := c.imageService.Upload(file.Filename, fileContent)
+        if err != nil {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "이미지 업로드 실패"})
+        }
+        editProfileDto.ImageUri = imageUrl
+    }
 
-	result := c.authService.EditProfile(userId, editProfileDto)
-	return ctx.Status(result.Status).JSON(result.Data)
+    result := c.authService.EditProfile(userId, editProfileDto)
+    return ctx.Status(result.Status).JSON(result.Data)
 }
 
 // Logout godoc
