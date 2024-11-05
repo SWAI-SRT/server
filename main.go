@@ -32,67 +32,67 @@ import (
 // @schemes http
 
 func main() {
-	cfg, err := config.LoadConfig()
-	if err != nil {
-		log.Fatalf("구성을 로드하지 못했습니다. %v", err)
-	}
+    cfg, err := config.LoadConfig()
+    if err != nil {
+        log.Fatalf("구성을 로드하지 못했습니다. %v", err)
+    }
 
-	db, err := config.InitDB(&cfg)
-	if err != nil {
-		log.Fatalf("데이터베이스 초기화 실패: %v", err)
-	}
+    db, err := config.InitDB(&cfg)
+    if err != nil {
+        log.Fatalf("데이터베이스 초기화 실패: %v", err)
+    }
 
-	var ConfigDefault = swagger.Config{
-		BasePath: "/",
-		FilePath: "./docs/swagger.json",
-		Path:     "swagger",
-		Title:    "Swagger API Documentation",
-	}
+    var ConfigDefault = swagger.Config{
+        BasePath: "/",
+        FilePath: "./docs/swagger.json",
+        Path:     "swagger",
+        Title:    "Swagger API Documentation",
+    }
 
-	app := fiber.New()
+    app := fiber.New()
 
-	app.Use(logger.New())
-	app.Use(swagger.New(ConfigDefault))
+    app.Use(logger.New())
+    app.Use(swagger.New(ConfigDefault))
 
-	authService := service.NewAuthService(db, cfg.JWTSecret)
-	imageService := service.NewImageService(&cfg)
-	authController := controller.NewAuthController(authService, imageService)
+    authService := service.NewAuthService(db, cfg.JWTSecret)
+    imageService := service.NewImageService(&cfg)
+    authController := controller.NewAuthController(authService, imageService)
 
-	mapService := service.NewMapService(db)
-	mapController := controller.NewMapController(mapService)
+    mapService := service.NewMapService(db)
+    mapController := controller.NewMapController(mapService)
 
-	reportsService := service.NewReportsService(db)
-	reportsController := controller.NewReportsController(reportsService, mapService)
+    reportsService := service.NewReportsService(db)
+    reportsController := controller.NewReportsController(reportsService, imageService, mapService)
 
-	imageController := controller.NewImageController(imageService)
+    imageController := controller.NewImageController(imageService)
 
-	api := app.Group("/auth")
-	api.Post("/signup", authController.Signup)
-	api.Post("/signin", authController.Signin)
-	api.Get("/refresh", authController.Refresh)
+    api := app.Group("/auth")
+    api.Post("/signup", authController.Signup)
+    api.Post("/signin", authController.Signin)
+    api.Get("/refresh", authController.Refresh)
 
-	api.Use(middleware.JWTMiddleware(cfg.JWTSecret))
-	api.Get("/me", authController.GetProfile)
-	api.Patch("/me", authController.EditProfile)
-	api.Post("/logout", authController.Logout)
-	api.Delete("/me", authController.DeleteAccount)
+    api.Use(middleware.JWTMiddleware(cfg.JWTSecret))
+    api.Get("/me", authController.GetProfile)
+    api.Patch("/me", authController.EditProfile)
+    api.Post("/logout", authController.Logout)
+    api.Delete("/me", authController.DeleteAccount)
 
-	reports := app.Group("/reports")
-	reports.Use(middleware.JWTMiddleware(cfg.JWTSecret))
-	reports.Post("/", reportsController.CreateReport)
-	reports.Get("/", reportsController.FindAllReports)
-	reports.Get("/by-user", reportsController.FindReportByUserId)
-	reports.Get("/:reportId", reportsController.FindReport)
+    reports := app.Group("/reports")
+    reports.Use(middleware.JWTMiddleware(cfg.JWTSecret))
+    reports.Post("/", reportsController.CreateReport)
+    reports.Get("/", reportsController.FindAllReports)
+    reports.Get("/by-user", reportsController.FindReportByUserId)
+    reports.Get("/:reportId", reportsController.FindReport)
 
-	mapGroup := app.Group("/map")
-	mapGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
-	mapGroup.Post("/", mapController.CreateMarker)
-	mapGroup.Get("/", mapController.FindAllMarker)
-	mapGroup.Get("/:markerId", mapController.FindMarker)
+    mapGroup := app.Group("/map")
+    mapGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
+    mapGroup.Post("/", mapController.CreateMarker)
+    mapGroup.Get("/", mapController.FindAllMarker)
+    mapGroup.Get("/:markerId", mapController.FindMarker)
 
-	image := app.Group("/image")
-	image.Use(middleware.JWTMiddleware(cfg.JWTSecret))
-	image.Post("/", imageController.UploadImage)
+    image := app.Group("/image")
+    image.Use(middleware.JWTMiddleware(cfg.JWTSecret))
+    image.Post("/", imageController.UploadImage)
 
-	log.Fatal(app.Listen(":8080"))
+    log.Fatal(app.Listen(":8080"))
 }

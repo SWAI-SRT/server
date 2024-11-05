@@ -20,28 +20,6 @@ definitions:
       userId:
         type: integer
     type: object
-  dto.CreateReportDto:
-    properties:
-      content:
-        type: string
-      date:
-        type: string
-      latitude:
-        type: number
-      longitude:
-        type: number
-      title:
-        type: string
-      type:
-        type: string
-    required:
-    - content
-    - date
-    - latitude
-    - longitude
-    - title
-    - type
-    type: object
   dto.EditProfileDto:
     properties:
       address:
@@ -500,15 +478,43 @@ paths:
       - Reports
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: 새로운 신고를 생성합니다.
       parameters:
-      - description: 신고 정보
-        in: body
-        name: createReportDto
+      - description: 신고 유형
+        in: formData
+        name: type
         required: true
-        schema:
-          $ref: '#/definitions/dto.CreateReportDto'
+        type: string
+      - description: 신고 제목
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: 신고 내용
+        in: formData
+        name: content
+        required: true
+        type: string
+      - description: 신고 날짜
+        in: formData
+        name: date
+        required: true
+        type: string
+      - description: 위도
+        in: formData
+        name: latitude
+        required: true
+        type: number
+      - description: 경도
+        in: formData
+        name: longitude
+        required: true
+        type: number
+      - description: 이미지 파일
+        in: formData
+        name: imageUri
+        type: file
       produces:
       - application/json
       responses:

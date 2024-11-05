@@ -471,7 +471,7 @@ const docTemplate = `{
             "post": {
                 "description": "새로운 신고를 생성합니다.",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -482,13 +482,52 @@ const docTemplate = `{
                 "summary": "신고 생성",
                 "parameters": [
                     {
-                        "description": "신고 정보",
-                        "name": "createReportDto",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateReportDto"
-                        }
+                        "type": "string",
+                        "description": "신고 유형",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "신고 제목",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "신고 내용",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "신고 날짜",
+                        "name": "date",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "위도",
+                        "name": "latitude",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "경도",
+                        "name": "longitude",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "이미지 파일",
+                        "name": "imageUri",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -625,37 +664,6 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "integer"
-                }
-            }
-        },
-        "dto.CreateReportDto": {
-            "type": "object",
-            "required": [
-                "content",
-                "date",
-                "latitude",
-                "longitude",
-                "title",
-                "type"
-            ],
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },

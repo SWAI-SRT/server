@@ -9,58 +9,81 @@ import (
 )
 
 type ReportsController struct {
-	reportsService *service.ReportsService
-	mapService     *service.MapService
+    reportsService *service.ReportsService
+    imageService   *service.ImageService
+    mapService     *service.MapService
 }
 
-func NewReportsController(reportsService *service.ReportsService, mapService *service.MapService) *ReportsController {
-	return &ReportsController{
-		reportsService: reportsService,
-		mapService:     mapService,
-	}
+func NewReportsController(reportsService *service.ReportsService, imageService *service.ImageService, mapService *service.MapService) *ReportsController {
+    return &ReportsController{
+        reportsService: reportsService,
+        imageService:   imageService,
+        mapService:     mapService,
+    }
 }
 
 // CreateReport godoc
 // @Summary 신고 생성
 // @Description 새로운 신고를 생성합니다.
 // @Tags Reports
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
-// @Param createReportDto body dto.CreateReportDto true "신고 정보"
+// @Param type formData string true "신고 유형"
+// @Param title formData string true "신고 제목"
+// @Param content formData string true "신고 내용"
+// @Param date formData string true "신고 날짜"
+// @Param latitude formData float64 true "위도"
+// @Param longitude formData float64 true "경도"
+// @Param imageUri formData file false "이미지 파일"
 // @Success 201 {object} map[string]interface{} "신고가 성공적으로 생성되었습니다"
 // @Failure 400 {object} map[string]interface{} "잘못된 요청입니다"
 // @Failure 500 {object} map[string]interface{} "신고 생성에 실패했습니다"
 // @Router /reports [post]
 func (c *ReportsController) CreateReport(ctx *fiber.Ctx) error {
-	var createReportDto dto.CreateReportDto
-	if err := ctx.BodyParser(&createReportDto); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 요청 입니다"})
-	}
+    var createReportDto dto.CreateReportDto
+    if err := ctx.BodyParser(&createReportDto); err != nil {
+        return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 요청 입니다"})
+    }
 
-	userId := ctx.Locals("userId").(uint)
-	result := c.reportsService.CreateReport(userId, createReportDto)
+    file, err := ctx.FormFile("imageUri")
+    if err == nil {
+        fileContent, err := file.Open()
+        if err != nil {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "파일을 열 수 없습니다"})
+        }
+        defer fileContent.Close()
 
-	if result.Status == fiber.StatusCreated {
-		reportId, ok := result.Data.(fiber.Map)["reportId"].(uint)
-		if !ok {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "신고 ID를 가져오는데 실패했습니다"})
-		}
+        imageUrl, err := c.imageService.Upload(file.Filename, fileContent)
+        if err != nil {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "이미지 업로드 실패"})
+        }
+        createReportDto.ImageUri = imageUrl
+    }
 
-		createMarkerDto := dto.CreateMarkerDto{
-			Type:      createReportDto.Type,
-			Latitude:  createReportDto.Latitude,
-			Longitude: createReportDto.Longitude,
-			ReportID:  int(reportId),
-			UserID:    userId,
-		}
+    userId := ctx.Locals("userId").(uint)
+    result := c.reportsService.CreateReport(userId, createReportDto)
 
-		markerResult := c.mapService.CreateMarker(userId, createMarkerDto)
-		if markerResult.Status != fiber.StatusCreated {
-			return ctx.Status(markerResult.Status).JSON(markerResult.Data)
-		}
-	}
+    if result.Status == fiber.StatusCreated {
+        reportId, ok := result.Data.(fiber.Map)["reportId"].(uint)
+        if !ok {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "신고 ID를 가져오는데 실패했습니다"})
+        }
 
-	return ctx.Status(result.Status).JSON(result.Data)
+        createMarkerDto := dto.CreateMarkerDto{
+            Type:      createReportDto.Type,
+            Latitude:  createReportDto.Latitude,
+            Longitude: createReportDto.Longitude,
+            ReportID:  int(reportId),
+            UserID:    userId,
+        }
+
+        markerResult := c.mapService.CreateMarker(userId, createMarkerDto)
+        if markerResult.Status != fiber.StatusCreated {
+            return ctx.Status(markerResult.Status).JSON(markerResult.Data)
+        }
+    }
+
+    return ctx.Status(result.Status).JSON(result.Data)
 }
 
 // FindAllReports godoc
@@ -72,8 +95,8 @@ func (c *ReportsController) CreateReport(ctx *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{} "신고 조회에 실패했습니다"
 // @Router /reports [get]
 func (c *ReportsController) FindAllReports(ctx *fiber.Ctx) error {
-	result := c.reportsService.FindAllReports()
-	return ctx.Status(result.Status).JSON(result.Data)
+    result := c.reportsService.FindAllReports()
+    return ctx.Status(result.Status).JSON(result.Data)
 }
 
 // FindReport godoc
@@ -87,13 +110,13 @@ func (c *ReportsController) FindAllReports(ctx *fiber.Ctx) error {
 // @Failure 404 {object} map[string]interface{} "신고를 찾을 수 없습니다"
 // @Router /reports/{reportId} [get]
 func (c *ReportsController) FindReport(ctx *fiber.Ctx) error {
-	reportId, err := strconv.ParseUint(ctx.Params("reportId"), 10, 32)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 신고 ID입니다"})
-	}
+    reportId, err := strconv.ParseUint(ctx.Params("reportId"), 10, 32)
+    if err != nil {
+        return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "잘못된 신고 ID입니다"})
+    }
 
-	result := c.reportsService.FindReport(uint(reportId))
-	return ctx.Status(result.Status).JSON(result.Data)
+    result := c.reportsService.FindReport(uint(reportId))
+    return ctx.Status(result.Status).JSON(result.Data)
 }
 
 // FindReportByUserId godoc
@@ -106,11 +129,11 @@ func (c *ReportsController) FindReport(ctx *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{} "신고 조회에 실패했습니다"
 // @Router /reports/by-user [get]
 func (c *ReportsController) FindReportByUserId(ctx *fiber.Ctx) error {
-	userId, ok := ctx.Locals("userId").(uint)
-	if !ok {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "유효하지 않은 사용자 ID입니다"})
-	}
+    userId, ok := ctx.Locals("userId").(uint)
+    if !ok {
+        return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "유효하지 않은 사용자 ID입니다"})
+    }
 
-	result := c.reportsService.FindReportByUserId(userId)
-	return ctx.Status(result.Status).JSON(result.Data)
+    result := c.reportsService.FindReportByUserId(userId)
+    return ctx.Status(result.Status).JSON(result.Data)
 }
