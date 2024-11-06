@@ -66,6 +66,10 @@ func main() {
 
     imageController := controller.NewImageController(imageService)
 
+    app.Get("/health", func(c *fiber.Ctx) error {
+        return c.SendString("OK")
+    })
+
     api := app.Group("/auth")
     api.Post("/signup", authController.Signup)
     api.Post("/signin", authController.Signin)
