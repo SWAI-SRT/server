@@ -3,11 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/gofiber/contrib/swagger"
-
 	"swai/config"
 	"swai/controller"
-	_ "swai/docs"
 	"swai/middleware"
 	"swai/service"
 
@@ -42,17 +39,9 @@ func main() {
         log.Fatalf("데이터베이스 초기화 실패: %v", err)
     }
 
-    var ConfigDefault = swagger.Config{
-        BasePath: "/",
-        FilePath: "./docs/swagger.json",
-        Path:     "swagger",
-        Title:    "Swagger API Documentation",
-    }
-
     app := fiber.New()
 
     app.Use(logger.New())
-    app.Use(swagger.New(ConfigDefault))
 
     authService := service.NewAuthService(db, cfg.JWTSecret)
     imageService := service.NewImageService(&cfg)
